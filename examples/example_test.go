@@ -6,13 +6,13 @@ import (
 	"time"
 
 	"github.com/addihorn/enode-gosdk/pkg/auth"
-	"github.com/addihorn/enode-gosdk/pkg/environments"
+	"github.com/addihorn/enode-gosdk/pkg/enums/environments"
 )
 
 func BenchmarkMain(b *testing.B) {
 
 	client_id := "<YOUR-CLIENT_ID>"
-	client_secret := "<YOU-CLIENT-SECRET>"
+	client_secret := "<YOUR-CLIENT-SECRET>"
 
 	session, err := auth.NewAuthentication(client_id, client_secret, environments.SANDBOX, false)
 	if err != nil {

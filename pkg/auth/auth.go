@@ -10,14 +10,13 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/addihorn/enode-gosdk/pkg/environments"
 )
 
 type Authentication struct {
 	Access_token string
 	Scope        string
 	Token_type   string
+	Environment  string
 }
 
 func NewAuthentication(client_id, client_secret, environment string, automaticTokenRefresh bool) (*Authentication, error) {
@@ -28,7 +27,7 @@ func NewAuthentication(client_id, client_secret, environment string, automaticTo
 		return nil, errors.Join(errors.New("authentication: could not get a new authentication session"), err)
 	}
 
-	auth := &Authentication{}
+	auth := &Authentication{Environment: environment}
 
 	if err = json.Unmarshal(authData, auth); err != nil {
 		return nil, errors.Join(errors.New("authentication: error, while trying to unmarshal response from auth service"), err)
@@ -44,7 +43,7 @@ func NewAuthentication(client_id, client_secret, environment string, automaticTo
 
 		time.AfterFunc(
 			time.Duration(expires_in-30)*time.Second,
-			func() { auth.refreshToken(client_id, client_secret, environments.SANDBOX) },
+			func() { auth.refreshToken(client_id, client_secret, environment) },
 		)
 	}
 
@@ -79,8 +78,8 @@ func (sess *Authentication) refreshToken(client_id, client_secret, environment s
 
 func authenticate(client_id, client_secret, environment string) ([]byte, error) {
 
-	authUrl := fmt.Sprintf("https://oauth.%s.enode.io/oauth2/token", environment)
-
+	authUrl := fmt.Sprintf("%s/oauth2/token", strings.Replace(environment, "enode-api", "oauth", 1))
+	fmt.Println(authUrl)
 	form := url.Values{}
 	form.Add("grant_type", "client_credentials")
 
@@ -105,7 +104,14 @@ func authenticate(client_id, client_secret, environment string) ([]byte, error) 
 		fmt.Printf("client: could not read response body: %s\n", err)
 		return nil, errors.Join(errors.New("client: could not read response body: \n"), err)
 	}
-	fmt.Printf("client: response body: %s\n", resBody)
 
-	return resBody, nil
+	switch resp.StatusCode {
+	case http.StatusUnauthorized:
+		return resBody, errors.Join(fmt.Errorf("client: unauthorized access \n %+v", resp.Status))
+	case http.StatusOK:
+		return resBody, nil
+	default:
+		return resBody, errors.Join(fmt.Errorf("client: error during authentication  \n %+v", resp))
+	}
+
 }
