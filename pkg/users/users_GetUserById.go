@@ -59,6 +59,8 @@ func GetUserById(sess *session.Session, userId string) (*User, error) {
 		return nil, errors.Join(errors.New(REST_USER_UNAUTHORIZED_ERROR), fmt.Errorf("%+v", resp.Status))
 	case http.StatusInternalServerError:
 		return nil, errors.Join(errors.New(REST_USER_GENERAL_ERROR), fmt.Errorf("%+v", resp.Status))
+	case http.StatusNotFound:
+		return nil, errors.Join(errors.New(REST_USER_NO_USERS_ERROR), fmt.Errorf("%+v", resp.Status))
 	case http.StatusOK:
 		return readUserByIdPayload(resp)
 	}

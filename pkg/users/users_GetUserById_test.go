@@ -102,6 +102,14 @@ func TestGetUserById_NetworkError(t *testing.T) {
 func TestGetUserById_Unauthorized(t *testing.T) {
 	// Create a test server that will return an unauthorized response
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, `
+{
+  "type": "https://docs.enode.io/problems/unauthorized",
+  "title": "Unauthorized",
+  "detail": "Unauthorized for resource",
+  "error": "https://docs.enode.io/problems/unauthorized",
+  "message": "Unauthorized for resource"
+}`)
 		w.WriteHeader(http.StatusUnauthorized)
 	}))
 	defer ts.Close()
@@ -185,4 +193,41 @@ func TestGetUserById_Success(t *testing.T) {
 	if actualUser.Id != expectedUser.Id {
 		t.Errorf("GetUserById returned incorrect user ID. Expected %s, got %s", expectedUser.Id, actualUser.Id)
 	}
+}
+
+func TestGetUserById_UserIdNotFound(t *testing.T) {
+
+	// Create a test server that will return a JSON response with invalid format
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, `
+{
+  "type": "https://docs.enode.io/problems/not-found",
+  "title": "User does not exist",
+  "detail": "Could not find user with ID foo",
+  "error": "https://docs.enode.io/problems/not-found",
+  "message": "Could not find user with ID foo"
+}`)
+	}))
+	defer ts.Close()
+
+	sess := &session.Session{
+		Authentication: &auth.Authentication{
+			Environment:  ts.URL,
+			Access_token: "test-access-token",
+		},
+	}
+
+	_, err := GetUserById(sess, "not-found-uderid")
+
+	// Check if the error is not nil and contains the expected error message
+	if err == nil {
+		t.Error("Expected error, but got nil")
+	}
+	expectedError := errors.Join(errors.New(REST_USER_NO_USERS_ERROR), fmt.Errorf("404 Not Found"))
+	if err.Error() != expectedError.Error() {
+		t.Errorf("Expected error: %v, but got: %v", expectedError, err)
+	}
+
 }

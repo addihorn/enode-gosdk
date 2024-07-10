@@ -45,7 +45,7 @@ const (
 	REST_USER_PARSE_ERROR        string = "users: unable to parse user data"
 	REST_USER_UNAUTHORIZED_ERROR string = "users: unauthorized access"
 	REST_USER_GENERAL_ERROR      string = "users: some kind of error occured"
-	DATA_USER_NO_USERS_ERROR     string = "users: no users with this id found"
+	REST_USER_NO_USERS_ERROR     string = "users: no users with this id found"
 )
 
 func (user *User) LinkUser(sess *session.Session, data *LinkData) error {
