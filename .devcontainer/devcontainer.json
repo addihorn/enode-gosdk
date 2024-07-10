@@ -13,7 +13,8 @@
 			"extensions": [
 				"premparihar.gotestexplorer",
 				"MaxMedia.go-prof",
-				"windmilleng.vscode-go-autotest"
+				"windmilleng.vscode-go-autotest",
+				"TabNine.tabnine-vscode"
 			]
 		}
 	}
