@@ -1,0 +1,15 @@
+meta {
+  name: Set Operation Mode for Battery
+  type: http
+  seq: 4
+}
+
+post {
+  url: https://enode-api.production.enode.io/batteries/{batteryId}/operation-mode
+  body: json
+  auth: none
+}
+
+params:path {
+  batteryId: 
+}

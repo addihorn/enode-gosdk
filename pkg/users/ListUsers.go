@@ -10,14 +10,16 @@ import (
 	"github.com/addihorn/enode-gosdk/pkg/session"
 )
 
-func readUserByIdPayload(resp *http.Response) (*User, error) {
+func readUsersPayload(resp *http.Response) (map[string]*User, error) {
 
 	if resp.ContentLength == 0 {
-		return nil, errors.Join(errors.New(REST_USER_READ_ERROR), io.EOF)
+		return nil,
+			errors.Join(errors.New(REST_USER_READ_ERROR), io.EOF)
 	}
 
 	var bodyPayload []byte
 	if resBody, err := io.ReadAll(resp.Body); err != nil {
+		fmt.Printf("%s: %s\n", REST_USER_READ_ERROR, err)
 		return nil, errors.Join(errors.New(REST_USER_READ_ERROR), err)
 	} else {
 		bodyPayload = resBody
@@ -25,17 +27,22 @@ func readUserByIdPayload(resp *http.Response) (*User, error) {
 
 	fmt.Printf("%s\n", bodyPayload)
 
-	var userData *User
+	var userData Data
 	if err := json.Unmarshal(bodyPayload, &userData); err != nil {
 		return nil, errors.Join(errors.New(REST_USER_PARSE_ERROR), err)
 	}
 
-	return userData, nil
+	userCache := make(map[string]*User)
+	for _, user := range userData.Data {
+		userCache[user.Id] = user
+	}
+
+	return userCache, nil
 }
 
-func GetUserById(sess *session.Session, userId string) (*User, error) {
+func ListUsers(sess *session.Session) (map[string]*User, error) {
 
-	url := fmt.Sprintf("%s/users/%s", sess.Authentication.Environment, userId)
+	url := fmt.Sprintf("%s/users", sess.Authentication.Environment)
 	req, err := http.NewRequest("GET", url, nil)
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", sess.Authentication.Access_token))
 
@@ -53,16 +60,14 @@ func GetUserById(sess *session.Session, userId string) (*User, error) {
 	switch resp.StatusCode {
 	default:
 		return nil, errors.Join(fmt.Errorf(REST_USER_GENERAL_ERROR+"\n %+v", resp))
-	case http.StatusBadGateway:
-		return nil, errors.Join(errors.New(REST_USER_TRANSFER_ERROR), fmt.Errorf("Get %s: Bad Gateway", url))
 	case http.StatusUnauthorized:
 		return nil, errors.Join(errors.New(REST_USER_UNAUTHORIZED_ERROR), fmt.Errorf("%+v", resp.Status))
+	case http.StatusBadGateway:
+		return nil, errors.Join(errors.New(REST_USER_TRANSFER_ERROR), fmt.Errorf("Get %s: Bad Gateway", url))
 	case http.StatusInternalServerError:
 		return nil, errors.Join(errors.New(REST_USER_GENERAL_ERROR), fmt.Errorf("%+v", resp.Status))
-	case http.StatusNotFound:
-		return nil, errors.Join(errors.New(REST_USER_NO_USERS_ERROR), fmt.Errorf("%+v", resp.Status))
 	case http.StatusOK:
-		return readUserByIdPayload(resp)
+		return readUsersPayload(resp)
 	}
 
 }

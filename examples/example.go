@@ -23,11 +23,11 @@ func main() {
 
 	// get all users
 	sess := session.NewSession(authentication)
-	userList, _ := users.GetUsers(sess)
+	userList, _ := users.ListUsers(sess)
 	fmt.Printf("%+v\n", userList)
 
 	// get specific user
-	user, err := users.GetUserById(sess, "1ab23cd4")
+	user, err := users.GetUser(sess, "1ab23cd4")
 	if err == nil {
 		fmt.Printf("User Data: %+v\n", user)
 	} else {

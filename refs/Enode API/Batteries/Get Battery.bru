@@ -1,0 +1,15 @@
+meta {
+  name: Get Battery
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://enode-api.production.enode.io/batteries/{batteryId}
+  body: none
+  auth: none
+}
+
+params:path {
+  batteryId: 
+}

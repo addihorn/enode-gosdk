@@ -1,0 +1,61 @@
+package users
+
+import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
+	"net/http"
+
+	"github.com/addihorn/enode-gosdk/pkg/session"
+)
+
+func (user *User) LinkUser(sess *session.Session, data *LinkData) error {
+	url := fmt.Sprintf("%s/users/%s/link", sess.Authentication.Environment, user.Id)
+
+	requestBody, err := json.Marshal(data)
+
+	if err != nil {
+		return errors.Join(errors.New("users: unable to create payload for link user service"), err)
+	}
+	fmt.Printf("%s\n", requestBody)
+
+	req, err := http.NewRequest("POST", url, bytes.NewReader(requestBody))
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", sess.Authentication.Access_token))
+
+	resp, err := http.DefaultClient.Do(req)
+
+	if err != nil {
+		fmt.Println(REST_USER_TRANSFER_ERROR)
+		return errors.Join(errors.New(REST_USER_TRANSFER_ERROR), err)
+	}
+
+	resBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("%s: %s\n", REST_USER_READ_ERROR, err)
+		return errors.Join(errors.New(REST_USER_READ_ERROR), err)
+	}
+
+	switch resp.StatusCode {
+	default:
+		return errors.Join(fmt.Errorf(REST_USER_GENERAL_ERROR+"\n %+v", resp))
+	case http.StatusUnauthorized:
+		return errors.Join(errors.New(REST_USER_UNAUTHORIZED_ERROR), fmt.Errorf("%+v", resp.Status))
+	case http.StatusNotFound:
+		return errors.Join(errors.New(REST_USER_NO_USERS_ERROR), fmt.Errorf("%+v", resp.Status))
+	case http.StatusInternalServerError:
+		return errors.Join(errors.New(REST_USER_GENERAL_ERROR), fmt.Errorf("%+v", resp.Status))
+	case http.StatusBadRequest:
+		return errors.Join(errors.New(REST_USER_VALLIDATION_ERROR), fmt.Errorf("%+v", resp.Status))
+	case http.StatusForbidden:
+		return errors.Join(errors.New(REST_USER_CONNECTION_LIMIT_REACHED), fmt.Errorf("%+v", resp.Status))
+	case http.StatusOK:
+		if err := json.Unmarshal(resBody, &data.LinkAccessData); err != nil {
+			fmt.Printf("%s: %s\n", REST_USER_PARSE_ERROR, err)
+			return errors.Join(errors.New(REST_USER_PARSE_ERROR), err)
+		}
+		return nil
+	}
+
+}

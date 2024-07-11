@@ -1,0 +1,24 @@
+meta {
+  name: Create Webhook
+  type: http
+  seq: 4
+}
+
+post {
+  url: https://enode-api.production.enode.io/webhooks
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "url": "",
+    "secret": "",
+    "events": [],
+    "apiVersion": "",
+    "authentication": {
+      "headerName": "",
+      "headerValue": ""
+    }
+  }
+}

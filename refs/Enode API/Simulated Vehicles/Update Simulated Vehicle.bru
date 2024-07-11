@@ -1,0 +1,25 @@
+meta {
+  name: Update Simulated Vehicle
+  type: http
+  seq: 4
+}
+
+patch {
+  url: https://enode-api.production.enode.io/simulated/vehicles/{simulatedVehicleId}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "",
+    "password": "",
+    "name": "",
+    "isReachable": "",
+    "chargeState": "",
+    "location": {
+      "longitude": "",
+      "latitude": ""
+    }
+  }
+}

@@ -1,0 +1,11 @@
+meta {
+  name: Refresh meter data
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://enode-api.production.enode.io/meters/{meterId}/refresh-hint
+  body: none
+  auth: none
+}

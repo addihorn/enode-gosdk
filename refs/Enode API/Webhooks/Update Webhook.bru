@@ -1,0 +1,25 @@
+meta {
+  name: Update Webhook
+  type: http
+  seq: 6
+}
+
+patch {
+  url: https://enode-api.production.enode.io/webhooks/{webhookId}
+  body: json
+  auth: none
+}
+
+params:path {
+  webhookId: 
+}
+
+body:json {
+  {
+    "url": "",
+    "secret": "",
+    "events": [],
+    "apiVersion": "",
+    "authentication": ""
+  }
+}

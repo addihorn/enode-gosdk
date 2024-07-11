@@ -1,0 +1,11 @@
+meta {
+  name: Check Available Inverter Vendors
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://enode-api.production.enode.io/health/inverter
+  body: none
+  auth: none
+}

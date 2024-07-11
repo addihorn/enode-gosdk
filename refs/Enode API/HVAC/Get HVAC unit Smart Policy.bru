@@ -1,0 +1,15 @@
+meta {
+  name: Get HVAC unit Smart Policy
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://enode-api.production.enode.io/hvacs/{hvacId}/smart-policy
+  body: none
+  auth: none
+}
+
+params:path {
+  hvacId: 
+}

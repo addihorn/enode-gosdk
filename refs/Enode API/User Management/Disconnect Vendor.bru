@@ -1,0 +1,15 @@
+meta {
+  name: Disconnect Vendor
+  type: http
+  seq: 4
+}
+
+delete {
+  url: https://enode-api.production.enode.io/users/{userId}/vendors/{vendor}
+  body: none
+  auth: none
+}
+
+params:path {
+  vendor: 
+}

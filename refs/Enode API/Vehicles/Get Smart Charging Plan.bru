@@ -1,0 +1,15 @@
+meta {
+  name: Get Smart Charging Plan
+  type: http
+  seq: 9
+}
+
+get {
+  url: https://enode-api.production.enode.io/vehicles/{vehicleId}/smart-charging-plans/{smartChargingPlanId}
+  body: none
+  auth: none
+}
+
+params:path {
+  smartChargingPlanId: 
+}

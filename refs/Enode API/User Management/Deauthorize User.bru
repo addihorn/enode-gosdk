@@ -1,0 +1,11 @@
+meta {
+  name: Deauthorize User
+  type: http
+  seq: 7
+}
+
+delete {
+  url: https://enode-api.production.enode.io/users/{userId}/authorization
+  body: none
+  auth: none
+}

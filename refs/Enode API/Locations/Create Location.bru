@@ -1,0 +1,15 @@
+meta {
+  name: Create Location
+  type: http
+  seq: 3
+}
+
+post {
+  url: https://enode-api.production.enode.io/users/{userId}/locations
+  body: json
+  auth: none
+}
+
+body:json {
+  {}
+}
