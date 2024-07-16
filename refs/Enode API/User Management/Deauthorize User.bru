@@ -5,7 +5,11 @@ meta {
 }
 
 delete {
-  url: https://enode-api.production.enode.io/users/{userId}/authorization
+  url: https://enode-api.sandbox.enode.io/users/:userId/authorization
   body: none
-  auth: none
+  auth: inherit
+}
+
+params:path {
+  userId: 
 }

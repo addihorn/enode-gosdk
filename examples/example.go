@@ -42,8 +42,8 @@ func main() {
 		Scopes:      []string{"battery:read:data"},
 		RedirectUri: "http://localhost:3000",
 	}
-	fmt.Printf("%+v\n", user.LinkUser(sess, &linkData)) // print error
-	fmt.Printf("%+v\n", linkData.LinkAccessData)        // print link data
+	fmt.Printf("%+v\n", user.Link(sess, &linkData)) // print error
+	fmt.Printf("%+v\n", linkData.LinkAccessData)    // print link data
 
 	// when using net/http redirect to url linkData.LinkAccessData.LinkUrl
 

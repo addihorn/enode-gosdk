@@ -119,7 +119,7 @@ func TTestGetUser_Unauthorized(t *testing.T) {
 	sess := &session.Session{
 		Authentication: &auth.Authentication{
 			Environment:  ts.URL,
-			Access_token: "test_token",
+			Access_token: "ZZZ_WRONG_TOKEN_ZZZ",
 		},
 	}
 

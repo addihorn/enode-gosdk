@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: https://enode-api.production.enode.io/users/{userId}
+  url: https://enode-api.sandbox.enode.io/users/:userId
   body: none
-  auth: none
+  auth: inherit
+}
+
+params:path {
+  userId: 1ab23cd4
 }

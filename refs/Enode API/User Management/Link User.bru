@@ -5,9 +5,13 @@ meta {
 }
 
 post {
-  url: https://enode-api.sandbox.enode.io/users/1ab23cd4/link
+  url: https://enode-api.sandbox.enode.io/users/:user/link
   body: json
   auth: inherit
+}
+
+params:path {
+  user: foobar2345
 }
 
 body:json {

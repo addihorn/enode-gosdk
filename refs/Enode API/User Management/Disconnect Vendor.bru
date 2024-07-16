@@ -5,11 +5,12 @@ meta {
 }
 
 delete {
-  url: https://enode-api.production.enode.io/users/{userId}/vendors/{vendor}
+  url: https://enode-api.sandbox.enode.io/users/:userId/vendors/:vendor
   body: none
-  auth: none
+  auth: inherit
 }
 
 params:path {
-  vendor: 
+  vendor: TESLA
+  userId: 
 }

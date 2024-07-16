@@ -40,6 +40,16 @@ func readUsersPayload(resp *http.Response) (map[string]*User, error) {
 	return userCache, nil
 }
 
+/*
+Returns a paginated list of all users.
+
+Parameters:
+  - sess: A pointer to a session.Session object containing the authentication details and environment URL.
+
+Returns:
+  - A map of user IDs to User structs, or nil if an error occurs.
+  - An error, or nil if the operation is successful.
+*/
 func ListUsers(sess *session.Session) (map[string]*User, error) {
 
 	url := fmt.Sprintf("%s/users", sess.Authentication.Environment)

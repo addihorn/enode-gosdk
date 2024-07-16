@@ -29,7 +29,7 @@ func TestLinkUser_StatusOK(t *testing.T) {
 
 	data := &users.LinkData{}
 	user := &users.User{Id: "user-1", CreatedAt: time.Now()}
-	err := user.LinkUser(sess, data)
+	err := user.Link(sess, data)
 
 	if err != nil {
 		t.Errorf("expected no error, got %v", err)
@@ -49,13 +49,13 @@ func TestLinkUser_StatusUnauthorized(t *testing.T) {
 	sess := &session.Session{
 		Authentication: &auth.Authentication{
 			Environment:  server.URL,
-			Access_token: "test_token",
+			Access_token: "ZZZ_WRONG_TOKEN_ZZZ",
 		},
 	}
 
 	data := &users.LinkData{}
 	user := &users.User{Id: "user-1", CreatedAt: time.Now()}
-	err := user.LinkUser(sess, data)
+	err := user.Link(sess, data)
 
 	expectedError := errors.Join(errors.New(users.REST_USER_UNAUTHORIZED_ERROR), fmt.Errorf("%s", "401 Unauthorized"))
 	if err.Error() != expectedError.Error() {
@@ -78,7 +78,7 @@ func TestLinkUser_StatusNotFound(t *testing.T) {
 
 	data := &users.LinkData{}
 	user := &users.User{Id: "user-1", CreatedAt: time.Now()}
-	err := user.LinkUser(sess, data)
+	err := user.Link(sess, data)
 
 	expectedError := errors.Join(errors.New(users.REST_USER_NO_USERS_ERROR), fmt.Errorf("%s", "404 Not Found"))
 	if err.Error() != expectedError.Error() {
@@ -101,7 +101,7 @@ func TestLinkUser_StatusInternalServerError(t *testing.T) {
 
 	data := &users.LinkData{}
 	user := &users.User{Id: "user-1", CreatedAt: time.Now()}
-	err := user.LinkUser(sess, data)
+	err := user.Link(sess, data)
 
 	expectedError := errors.Join(errors.New(users.REST_USER_GENERAL_ERROR), fmt.Errorf("%s", "500 Internal Server Error"))
 	if err.Error() != expectedError.Error() {
@@ -125,7 +125,7 @@ func TestLinkUser_InvalidResponseBody(t *testing.T) {
 
 	data := &users.LinkData{}
 	user := &users.User{Id: "user-1", CreatedAt: time.Now()}
-	err := user.LinkUser(sess, data)
+	err := user.Link(sess, data)
 
 	expectedError := errors.Join(errors.New(users.REST_USER_PARSE_ERROR), fmt.Errorf("%s", "invalid character 'i' looking for beginning of value"))
 	if err.Error() != expectedError.Error() {
@@ -150,7 +150,7 @@ func TestLinkUser_StatusBadRequest(t *testing.T) {
 	data := &users.LinkData{}
 	user := &users.User{Id: "user-1", CreatedAt: time.Now()}
 
-	err := user.LinkUser(sess, data)
+	err := user.Link(sess, data)
 
 	expectedError := errors.Join(errors.New(users.REST_USER_VALLIDATION_ERROR), fmt.Errorf("%s", "400 Bad Request"))
 	if err.Error() != expectedError.Error() {
@@ -179,7 +179,7 @@ func TestLinkUser_StatusForbidden(t *testing.T) {
 	data := &users.LinkData{}
 	user := &users.User{Id: "user-1", CreatedAt: time.Now()}
 
-	err := user.LinkUser(sess, data)
+	err := user.Link(sess, data)
 
 	expectedError := errors.Join(errors.New(users.REST_USER_CONNECTION_LIMIT_REACHED), fmt.Errorf("%s", "403 Forbidden"))
 	if err.Error() != expectedError.Error() {

@@ -11,7 +11,22 @@ import (
 	"github.com/addihorn/enode-gosdk/pkg/session"
 )
 
-func (user *User) LinkUser(sess *session.Session, data *LinkData) error {
+/*
+Creates a short-lived (24 hours), single-use device linking session.
+Use the returned linkUrl to present Link UI to your user via [mobile in-app browsers] or [web redirects], or use the linkToken to present Link UI via the [Link SDKs].
+
+Parameters:
+  - sess: A pointer to the session object containing authentication and environment details.
+  - data: A pointer to the LinkData object containing the necessary data for linking. If no error occured, the object data will be updated with the generated linkUrl and linkToken.
+
+Returns:
+  - An error if any occurred during the linking process. If no error occurred, it returns nil.
+
+[mobile in-app browsers]: https://developers.enode.com/docs/link-ui#mobile-in-app-browsers
+[web redirects]: https://developers.enode.com/docs/link-ui#web-redirects
+[Link SDKs]: https://developers.enode.com/docs/link-ui#mobile-sd-ks
+*/
+func (user *User) Link(sess *session.Session, data *LinkData) error {
 	url := fmt.Sprintf("%s/users/%s/link", sess.Authentication.Environment, user.Id)
 
 	requestBody, err := json.Marshal(data)
@@ -21,7 +36,7 @@ func (user *User) LinkUser(sess *session.Session, data *LinkData) error {
 	}
 	fmt.Printf("%s\n", requestBody)
 
-	req, err := http.NewRequest("POST", url, bytes.NewReader(requestBody))
+	req, _ := http.NewRequest("POST", url, bytes.NewReader(requestBody))
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", sess.Authentication.Access_token))
 
 	resp, err := http.DefaultClient.Do(req)

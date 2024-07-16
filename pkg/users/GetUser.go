@@ -33,6 +33,17 @@ func readUserByIdPayload(resp *http.Response) (*User, error) {
 	return userData, nil
 }
 
+/*
+Returns metadata about the given User ID, including a list of vendors for which the User has provided credentials.
+
+Parameters:
+  - sess: A pointer to the session object containing authentication and environment details.
+  - userId: The unique identifier of the user for which metadata needs to be retrieved.
+
+Returns:
+  - A pointer to the User object containing the retrieved metadata.
+  - An error if any occurred during the retrieval process.
+*/
 func GetUser(sess *session.Session, userId string) (*User, error) {
 
 	url := fmt.Sprintf("%s/users/%s", sess.Authentication.Environment, userId)
