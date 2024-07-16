@@ -1,0 +1,11 @@
+meta {
+  name: Refresh Inverter data
+  type: http
+  seq: 4
+}
+
+post {
+  url: https://enode-api.production.enode.io/inverters/{inverterId}/refresh-hint
+  body: none
+  auth: none
+}

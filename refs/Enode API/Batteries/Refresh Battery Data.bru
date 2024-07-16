@@ -1,0 +1,11 @@
+meta {
+  name: Refresh Battery Data
+  type: http
+  seq: 7
+}
+
+post {
+  url: https://enode-api.production.enode.io/batteries/{batteryId}/refresh-hint
+  body: none
+  auth: none
+}

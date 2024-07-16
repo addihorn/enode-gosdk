@@ -23,11 +23,11 @@ func main() {
 
 	// get all users
 	sess := session.NewSession(authentication)
-	userList, _ := users.GetUsers(sess)
+	userList, _ := users.ListUsers(sess)
 	fmt.Printf("%+v\n", userList)
 
 	// get specific user
-	user, err := users.GetUserById(sess, "1ab23cd4")
+	user, err := users.GetUser(sess, "1ab23cd4")
 	if err == nil {
 		fmt.Printf("User Data: %+v\n", user)
 	} else {
@@ -42,8 +42,8 @@ func main() {
 		Scopes:      []string{"battery:read:data"},
 		RedirectUri: "http://localhost:3000",
 	}
-	fmt.Printf("%+v\n", user.LinkUser(sess, &linkData)) // print error
-	fmt.Printf("%+v\n", linkData.LinkAccessData)        // print link data
+	fmt.Printf("%+v\n", user.Link(sess, &linkData)) // print error
+	fmt.Printf("%+v\n", linkData.LinkAccessData)    // print link data
 
 	// when using net/http redirect to url linkData.LinkAccessData.LinkUrl
 

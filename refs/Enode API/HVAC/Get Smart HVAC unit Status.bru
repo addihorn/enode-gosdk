@@ -1,0 +1,11 @@
+meta {
+  name: Get Smart HVAC unit Status
+  type: http
+  seq: 5
+}
+
+get {
+  url: https://enode-api.production.enode.io/hvacs/{hvacId}/smart-status
+  body: none
+  auth: none
+}

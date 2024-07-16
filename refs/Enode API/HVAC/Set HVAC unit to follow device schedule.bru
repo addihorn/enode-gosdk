@@ -1,0 +1,11 @@
+meta {
+  name: Set HVAC unit to follow device schedule
+  type: http
+  seq: 10
+}
+
+post {
+  url: https://enode-api.production.enode.io/hvacs/{hvacId}/follow-schedule
+  body: none
+  auth: none
+}

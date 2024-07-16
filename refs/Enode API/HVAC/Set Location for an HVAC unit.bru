@@ -1,0 +1,17 @@
+meta {
+  name: Set Location for an HVAC unit
+  type: http
+  seq: 6
+}
+
+put {
+  url: https://enode-api.production.enode.io/hvacs/{hvacId}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "locationId": ""
+  }
+}

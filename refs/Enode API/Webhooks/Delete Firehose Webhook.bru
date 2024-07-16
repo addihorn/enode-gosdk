@@ -1,0 +1,17 @@
+meta {
+  name: Delete Firehose Webhook
+  type: http
+  seq: 2
+}
+
+delete {
+  url: https://enode-api.production.enode.io/webhooks/firehose
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "url": ""
+  }
+}

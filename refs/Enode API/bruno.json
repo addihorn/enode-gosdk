@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Enode API",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

@@ -1,0 +1,17 @@
+meta {
+  name: Disconnect Vendor Type
+  type: http
+  seq: 5
+}
+
+delete {
+  url: https://enode-api.sandbox.enode.io/users/:user/vendors/:vendor/:vendorType
+  body: none
+  auth: inherit
+}
+
+params:path {
+  vendorType: battery
+  vendor: TESLA
+  user: foobar2345
+}

@@ -1,0 +1,11 @@
+meta {
+  name: Update HVAC unit Smart Policy
+  type: http
+  seq: 4
+}
+
+put {
+  url: https://enode-api.production.enode.io/hvacs/{hvacId}/smart-policy
+  body: json
+  auth: none
+}

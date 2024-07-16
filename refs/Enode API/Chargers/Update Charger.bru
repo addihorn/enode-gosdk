@@ -1,0 +1,17 @@
+meta {
+  name: Update Charger
+  type: http
+  seq: 4
+}
+
+put {
+  url: https://enode-api.production.enode.io/chargers/{chargerId}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "locationId": ""
+  }
+}

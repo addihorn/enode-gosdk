@@ -1,0 +1,11 @@
+meta {
+  name: Cancel HVAC Action
+  type: http
+  seq: 9
+}
+
+post {
+  url: https://enode-api.production.enode.io/hvacs/actions/{actionId}/cancel
+  body: none
+  auth: none
+}

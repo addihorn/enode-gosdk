@@ -1,0 +1,11 @@
+meta {
+  name: Update Smart Charging Policy
+  type: http
+  seq: 13
+}
+
+put {
+  url: https://enode-api.production.enode.io/chargers/{chargerId}/smart-charging-policy
+  body: json
+  auth: none
+}
