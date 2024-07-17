@@ -65,7 +65,7 @@ func (sess *Authentication) refreshToken(client_id, client_secret, environment s
 	}
 
 	if err = json.Unmarshal(authData, sess); err != nil {
-		fmt.Println(errors.Join(errors.New("authentication:unable to parse expiration-timer"), err))
+		fmt.Println(errors.Join(errors.New("authentication: unable to parse expiration-timer"), err))
 	}
 
 	expires_in, _ := strconv.Atoi(fmt.Sprint(f["expires_in"]))

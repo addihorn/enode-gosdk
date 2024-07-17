@@ -12,6 +12,7 @@ import (
 	"github.com/addihorn/enode-gosdk/pkg/enums/languages"
 	"github.com/addihorn/enode-gosdk/pkg/session"
 	"github.com/addihorn/enode-gosdk/pkg/users"
+	"github.com/addihorn/enode-gosdk/pkg/vehicles"
 	"github.com/addihorn/enode-gosdk/pkg/vendors"
 	"github.com/joho/godotenv"
 )
@@ -92,4 +93,27 @@ func Test_UserCRUD(t *testing.T) {
 	if user != nil {
 		t.Errorf("User should have been deleted\n%+v\n", user)
 	}
+}
+
+func Test_VehicleCRUD(t *testing.T) {
+	//change directory to direct to your project directory
+	err := godotenv.Load("/workspaces/enode-gosdk/.env")
+
+	if err != nil {
+		t.Errorf("integration: was not able to read .env file")
+	}
+
+	client_id := os.Getenv("ENODE_CLIENT_ID")
+	client_secret := os.Getenv("ENODE_CLIENT_SECRET")
+
+	authentication, err := auth.NewAuthentication(client_id, client_secret, environments.SANDBOX, true)
+	if err != nil {
+		t.Errorf("integration: was not able to create a new session:\n%+v\n", err)
+	}
+
+	// get all vehicles
+	sess := session.NewSession(authentication)
+	vehicleList, _ := vehicles.ListVehicles(sess)
+	fmt.Printf("%+v\n", vehicleList)
+
 }
