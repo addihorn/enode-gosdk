@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"reflect"
 	"testing"
 	"time"
 
@@ -115,5 +116,24 @@ func Test_VehicleCRUD(t *testing.T) {
 	sess := session.NewSession(authentication)
 	vehicleList, _ := vehicles.ListVehicles(sess)
 	fmt.Printf("%+v\n", vehicleList)
+	for k, v := range vehicleList {
+		fmt.Println("Brand for vehicle", k, fmt.Sprintf("%+v", v.Information.Brand))
+		// Capabilities will be exported as map
+		fmt.Println(k, fmt.Sprintf("%+v", v.Capabilities["information"]))
+	}
+
+	// read vehicles of user
+	// BE AWARE: a user with id 1ab23cd4 and some vehicles had to be linked
+	vehicleList, _ = vehicles.ListUserVehicles(sess, "1ab23cd4")
+	fmt.Printf("%+v\n", vehicleList)
+
+	// start charging vehicle
+	vehicleId := fmt.Sprint(reflect.ValueOf(vehicleList).MapKeys()[0])
+	vehicle := vehicleList[vehicleId]
+	action, _ := vehicle.StartCharging(sess)
+	fmt.Printf("%+v\n", action)
+
+	action, _ = vehicle.StopCharging(sess)
+	fmt.Printf("%+v\n", action)
 
 }

@@ -1,6 +1,14 @@
 package vehicles
 
-import "time"
+import (
+	"errors"
+	"fmt"
+	"io"
+	"net/http"
+	"time"
+
+	"github.com/addihorn/enode-gosdk/internal/devices"
+)
 
 type Data struct {
 	Data []*Vehicle `json:"data"`
@@ -13,12 +21,12 @@ type Vehicle struct {
 	IsReachable bool      `json:"isReachable"`
 	LastSeen    time.Time `json:"lastSeen"`
 	Information struct {
+		devices.BasicInformation
 		VIN         string `json:"vin"`
-		Brand       string `json:"brand"`
-		Model       string `json:"model"`
 		Year        int    `json:"year"`
 		DisplayName string `json:"displayName"`
 	} `json:"information"`
+
 	ChargeState struct {
 		BatteryLevel        float64   `json:"batteryLevel"`
 		Range               float64   `json:"range"`
@@ -37,11 +45,8 @@ type Vehicle struct {
 		Distance    float64   `json:"distance"`
 		LastUpdated time.Time `json:"lastUpdated"`
 	} `json:"odometer"`
-	Location struct {
-		Longitude   float64   `json:"longitude"`
-		Latitude    float64   `json:"latitude"`
-		LastUpdated time.Time `json:"lastUpdated"`
-	} `json:"location"`
+	Location     devices.Location              `json:"location"`
+	Capabilities map[string]devices.Capability `json:"capabilities"`
 }
 
 const (
@@ -50,6 +55,20 @@ const (
 	REST_VEHICLE_PARSE_ERROR        string = "vehicles: unable to parse vehicle data"
 	REST_VEHICLE_UNAUTHORIZED_ERROR string = "vehicles: unauthorized access"
 	REST_VEHICLE_GENERAL_ERROR      string = "vehicles: some kind of error occured"
-	REST_VEHICLE_NO_USERS_ERROR     string = "vehicles: no vehicles with this id found"
 	REST_VEHICLE_VALLIDATION_ERROR  string = "vehicles: invalid request payload input"
+	REST_VEHICLE_NO_VEHICLE_ERROR   string = "vehciles: no vehicle with this id found"
 )
+
+func getResponseBody(resp *http.Response) ([]byte, error) {
+	if resp.ContentLength == 0 {
+		return nil,
+			errors.Join(errors.New(REST_VEHICLE_READ_ERROR), io.EOF)
+	}
+
+	if resBody, err := io.ReadAll(resp.Body); err != nil {
+		fmt.Printf("%s: %s\n", REST_VEHICLE_READ_ERROR, err)
+		return nil, errors.Join(errors.New(REST_VEHICLE_READ_ERROR), err)
+	} else {
+		return resBody, nil
+	}
+}
