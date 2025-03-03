@@ -115,60 +115,6 @@
         }
       ],
       "request": {
-        "method": "GET",
-        "path": "/users"
-      },
-      "response": {
-        "body": {
-          "content": {
-            "data": []
-          },
-          "contentType": "application/json",
-          "encoded": false
-        },
-        "headers": {
-          "Content-Type": [
-            "application/json"
-          ]
-        },
-        "matchingRules": {
-          "body": {
-            "$.data": {
-              "combine": "AND",
-              "matchers": [
-                {
-                  "match": "type",
-                  "min": 1
-                }
-              ]
-            }
-          },
-          "header": {
-            "Content-Type": {
-              "combine": "AND",
-              "matchers": [
-                {
-                  "match": "regex",
-                  "regex": "application\\/json"
-                }
-              ]
-            }
-          }
-        },
-        "status": 200
-      },
-      "transport": "http",
-      "type": "Synchronous/HTTP"
-    },
-    {
-      "description": "A request to get all users",
-      "pending": false,
-      "providerStates": [
-        {
-          "name": "users sally and john exist"
-        }
-      ],
-      "request": {
         "headers": {
           "Authorization": [
             "Bearer abc123"
@@ -193,12 +139,7 @@
       "response": {
         "body": {
           "content": {
-            "data": [
-              {
-                "createdAt": "0001-01-01T00:00:00Z",
-                "id": ""
-              }
-            ]
+            "data": []
           },
           "contentType": "application/json",
           "encoded": false

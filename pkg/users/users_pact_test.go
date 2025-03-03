@@ -78,7 +78,7 @@ func TestUsersPact_GetUsers(t *testing.T) {
 			AddInteraction().Given("no user exists").
 			UponReceiving("A request to get all users").
 			WithRequest("GET", usersResourcePath, func(b *consumer.V4RequestBuilder) {
-				// b.Header("Authorization", matchers.Regex("Bearer abc123", "Bearer .+"))
+				b.Header("Authorization", matchers.Regex("Bearer abc123", "Bearer .+"))
 			}).
 			WillRespondWith(http.StatusOK, func(b *consumer.V4ResponseBuilder) {
 				b.
