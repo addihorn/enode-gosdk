@@ -1,2 +1,5 @@
 .env
+.env.mk
+*/**/pacts/**
 refs/EnodeAPI/
+pact/

@@ -129,7 +129,8 @@ func Test_VehicleCRUD(t *testing.T) {
 
 	// start charging vehicle
 	vehicleId := fmt.Sprint(reflect.ValueOf(vehicleList).MapKeys()[0])
-	vehicle := vehicleList[vehicleId]
+	vehicle, _ := vehicles.GetVehicle(sess, vehicleId)
+	fmt.Printf("%+v\n", vehicle)
 	action, _ := vehicle.StartCharging(sess)
 	fmt.Printf("%+v\n", action)
 

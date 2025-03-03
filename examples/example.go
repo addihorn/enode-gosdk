@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/addihorn/enode-gosdk/pkg/auth"
 	"github.com/addihorn/enode-gosdk/pkg/enums/environments"
@@ -9,12 +10,19 @@ import (
 	"github.com/addihorn/enode-gosdk/pkg/session"
 	"github.com/addihorn/enode-gosdk/pkg/users"
 	"github.com/addihorn/enode-gosdk/pkg/vendors"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	//change directory to direct to your project directory
+	err := godotenv.Load("/workspaces/enode-gosdk/.env")
 
-	client_id := "<YOUR-CLIENT_ID>"
-	client_secret := "<YOUR-CLIENT-SECRET>"
+	if err != nil {
+		fmt.Errorf(err.Error())
+	}
+
+	client_id := os.Getenv("ENODE_CLIENT_ID")
+	client_secret := os.Getenv("ENODE_CLIENT_SECRET")
 
 	authentication, err := auth.NewAuthentication(client_id, client_secret, environments.SANDBOX, true)
 	if err != nil {
