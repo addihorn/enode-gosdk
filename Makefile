@@ -44,8 +44,26 @@ publish_oapi:
 	--verification-results=test_result.txt \
 	--verification-results-content-type=text/plain \
 	--verifier go \
-	-b https://abc-corp.pactflow.io \
-	-k dMXolvw9KmnOpmu8FLNVAA
+	-b $(PACT_BROKER_PROTO)://$(PACT_BROKER_URL) \
+	-k ${PACT_BROKER_TOKEN}
+
+deploy-provider:
+	@echo "--- ✅ Checking if we can deploy provider"
+	pact/bin/pact-broker can-i-deploy \
+		--pacticipant ENODE \
+		-b ${PACT_BROKER_PROTO}://$(PACT_BROKER_URL) \
+		-k ${PACT_BROKER_TOKEN} \
+		--version 2024-10-01 \
+		--to-environment test
+
+record-deploy-provider:
+	@echo "--- ✅ Recording deployment of provider"
+	pact/bin/pact-broker record-deployment \
+		--pacticipant ENODE \
+		-b ${PACT_BROKER_PROTO}://$(PACT_BROKER_URL) \
+		-k ${PACT_BROKER_TOKEN} \
+		--version 2024-10-01 \
+		--environment test
 
 consumer: export PACT_TEST := true
 consumer:
@@ -53,7 +71,7 @@ consumer:
 	go test github.com/addihorn/enode-gosdk/pkg/users -v
 
 
-publish:
+publish_consumer:
 	@echo "--- 📝 Publishing Pacts"
 	pact/bin/pact-broker publish ${PWD}/pacts --consumer-app-version ${VERSION_COMMIT} --branch ${VERSION_BRANCH} \
 		-b $(PACT_BROKER_PROTO)://$(PACT_BROKER_URL) -k ${PACT_BROKER_TOKEN} --skip-merge
@@ -62,3 +80,22 @@ publish:
 	@echo
 	@echo "Head over to $(PACT_BROKER_PROTO)://$(PACT_BROKER_URL)"
 	@echo "to see your published contracts.	"
+
+
+deploy-consumer:
+	@echo "--- ✅ Checking if we can deploy consumer"
+	pact/bin/pact-broker can-i-deploy \
+		--pacticipant enode-go-sdk \
+		-b ${PACT_BROKER_PROTO}://$(PACT_BROKER_URL) \
+		-k ${PACT_BROKER_TOKEN} \
+		--version ${VERSION_COMMIT} \
+		--to-environment test
+
+record-deploy-consumer:
+	@echo "--- ✅ Recording deployment of consumer"
+	pact/bin/pact-broker record-deployment \
+		--pacticipant enode-go-sdk \
+		-b ${PACT_BROKER_PROTO}://$(PACT_BROKER_URL) \
+		-k ${PACT_BROKER_TOKEN} \
+		--version ${VERSION_COMMIT} \
+		--environment test
